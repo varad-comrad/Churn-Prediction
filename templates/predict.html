@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+
+{% block title %} <title>Predict</title> {% endblock %}
+
+{% block body %}
+<h1>Predict</h1>
+    <form method="post">
+        <label for="Idade">Idade:</label>
+        <input type="number" id="Idade" name="Idade" required min="1" max="100">
+
+        <br>
+
+        <label for="UsoMensal">Uso Mensal:</label>
+        <input type="number" id="UsoMensal" name="UsoMensal" required min = "0">
+
+        <br>
+
+        <label for="Plano">Plano:</label>
+        <select id="Plano" name="Plano">
+            <option value="Premium"> Premium </option>
+            <option value="Standard"> Standard </option>
+            <option value="Basico"> Básico </option>
+        </select>
+
+        <br>
+
+        <label for="SatisfacaoCliente">Satisfacao do cliente:</label>
+        <input type="number" id="SatisfacaoCliente" name="SatisfacaoCliente" required min="1" max="5" step="1">
+
+        <br>
+
+        <label for="TempoContrato">Tempo do contrato:</label>
+        <select id="TempoContrato" name="TempoContrato">
+            <option value="Curto"> Curto </option>
+            <option value="Medio"> Medio </option>
+            <option value="Longo"> Longo </option>
+        </select>
+
+        <br>
+
+        <label for="ValorMensal">Valor Mensal:</label>
+        <input type="number" id="ValorMensal" name="ValorMensal" required>
+
+        <br>
+
+        <input type="submit" value="Prever">
+    </form>
+</br>
+{% if result %}
+    <p>Result: </p> {{ result }}
+{% endif %}
+</br>
+<a href="{{ url_for('index') }}">home</a>
+{% endblock %}

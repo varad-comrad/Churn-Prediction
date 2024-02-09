@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+
+
+{% block title %} <title>Home</title> {% endblock %}
+
+{% block body %}
+<h1>Home</h1>
+<p>Welcome to the home page</p>
+<a href="{{ url_for('predict') }}">predict</a> </br>
+<a href="{{ url_for('update') }}">update</a>
+{% endblock %}
