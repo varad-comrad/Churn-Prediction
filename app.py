@@ -2,6 +2,8 @@ from flask import Flask, render_template, request, url_for, redirect
 import subprocess
 import pathlib
 import joblib
+import numpy as np
+import pandas as pd
 
 app = Flask(__name__, template_folder='templates')
 
@@ -24,7 +26,7 @@ def update():
             update_file = pathlib.Path(__file__) / 'ml' / 'update.py'
             subprocess.run(['python', str(update_file), '--rows', complement], shell=True)
             complement = []
-            return redirect(url_for('index'))
+            return redirect(url_for('train'))
         else:
             return render_template('update.html', complement=complement)
     else:
@@ -41,14 +43,15 @@ def train():
 @app.route('/predict', methods=['GET', 'POST'])
 def predict():
     result = None
+    columns = ['Idade', 'UsoMensal', 'Plano', 'SatisfacaoCliente', 'TempoContrato', 'ValorMensal']
     if request.method == 'POST':
-        model_path = pathlib.Path(__file__).parent / 'ml' / 'model.pkl'
+        model_path = pathlib.Path(__file__).parent / 'model' / 'model.pkl'
         with model_path.open('rb') as f:
             model = joblib.load(f)
         inputs = request.form['Idade'], request.form['UsoMensal'], request.form['Plano'], request.form[
             'SatisfacaoCliente'], request.form['TempoContrato'], request.form['ValorMensal']
-
-        result = model.predict(inputs)
+        inputs = pd.DataFrame([inputs], columns=columns)
+        result = "Sim" if model.predict(inputs)[0] == 1 else 'Não'
     return render_template('predict.html', result=result)
 
 
