@@ -12,21 +12,23 @@ app = Flask(__name__, template_folder='templates')
 def index():
     return render_template('index.html')
 
-
+complement = []
 @app.route('/update', methods=['GET', 'POST'])
 def update():
-    complement = []
+    global complement
     if request.method == 'POST':
         complement.append([request.form['Idade'], request.form['UsoMensal'],
                            request.form['Plano'], request.form['SatisfacaoCliente'], 
                            request.form['TempoContrato'], request.form['ValorMensal'], 
-                           int(request.form['Churn'] == 'Sim')]) 
+                           str(int(request.form['Churn'] == 'Sim'))]) 
         
         if 'Update' in request.form:
-            update_file = pathlib.Path(__file__) / 'ml' / 'update.py'
-            subprocess.run(['python', str(update_file), '--rows', complement], shell=True)
+            update_file = pathlib.Path(__file__).parent / 'ml' / 'update.py'
+            arg = ' '.join([','.join(c) for c in complement])
+            print(arg)
+            subprocess.run(f'python {str(update_file)} --rows {arg}', shell=True)
             complement = []
-            return redirect(url_for('train'))
+            return redirect(url_for('index'))
         else:
             return render_template('update.html', complement=complement)
     else:
